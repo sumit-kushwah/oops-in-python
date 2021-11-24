@@ -17,13 +17,35 @@ class Book:
 
     # TODO: __getattribute__ called when an attr is retrieved. Don't
     # directly access the attr name otherwise a recursive loop is created
+    def __getattribute__(self, name: str):
+        if name == 'price':
+            p = super().__getattribute__('price')
+            d = super().__getattribute__('_discount')
+            return p - p * d
+        return super().__getattribute__(name)
 
     # TODO: __setattr__ called when an attribute value is set. Don't set the attr
     # directly here otherwise a recursive loop causes a crash
+    def __setattr__(self, name: str, value) -> None:
+        if name == 'price' and type(value) is not float:
+            raise ValueError('Price value must be float')
+        return super().__setattr__(name, value)
 
     # TODO: __getattr__ called when __getattribute__ lookup fails - you can
     # pretty much generate attributes on the fly with this method
+    def __getattr__(self, name):
+        return f"{name} property not found"
 
 
 b1 = Book("War and Peace", "Leo Tolstoy", 39.95)
 b2 = Book("The Catcher in the Rye", "JD Salinger", 29.95)
+
+# Try setting and accessing the price
+b1.price = 38.95
+print(b1)
+
+b2.price = float(40)  # using an int will raise an exception
+print(b2)
+
+# If an attribute doesn't exist, __getattr__ will be called
+print(b1.randomprop)
