@@ -4,16 +4,22 @@
 from dataclasses import dataclass
 
 
-@dataclass()  # TODO: "The "frozen" parameter makes the class immutable
+# TODO: "The "frozen" parameter makes the class immutable
+@dataclass(frozen=True)
 class ImmutableClass:
     value1: str = "Value 1"
     value2: int = 0
+
+    def setvalue(self, value):
+        # self.value2 = value
+        pass
 
 
 obj = ImmutableClass()
 print(obj.value1)
 
 # TODO: attempting to change the value of an immutable class throws an exception
-
+# obj.value2 = 23
 
 # TODO: even functions within the class can't change anything
+obj.setvalue(20)
